@@ -28,4 +28,19 @@ def test_invalid_login():
 
         expect(page.locator("[data-test='error']"))
 
-        browser.close
+        browser.close()
+
+def test_add_to_cart():
+    with sync_playwright() as p: 
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+
+        page.goto("https://www.saucedemo.com")
+        page.fill("input[data-test='username']", "standard_user")
+        page.fill("input[data-test='password']", "secret_sauce")
+        page.click("input[data-test='login-button']")
+
+        page.click("[data-test='add-to-cart-sauce-labs-onesie']")
+        expect(page.locator("[data-test='shopping-cart-badge']")).to_have_text('1')
+
+        browser.close()
