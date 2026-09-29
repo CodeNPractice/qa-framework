@@ -1,46 +1,33 @@
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import expect
 
-def test_valid_login():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
+def test_valid_login(page):
+    
+    page.goto("https://www.saucedemo.com")
+    page.fill("input[data-test='username']", "standard_user")
+    page.fill("input[name='password']", "secret_sauce")
+    page.click("input[name='login-button']")
 
-        page.goto("https://www.saucedemo.com")
-        page.fill("input[data-test='username']", "standard_user")
-        page.fill("input[name='password']", "secret_sauce")
-        page.click("input[name='login-button']")
-
-        expect(page.locator("[data-test='title']")).to_have_text("Products")
+    expect(page.locator("[data-test='title']")).to_have_text("Products")
         # assert something that only exists after login
 
-        browser.close()
 
+def test_invalid_login(page):
+    
 
-def test_invalid_login():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
+    page.goto("https://www.saucedemo.com")
+    page.fill("input[data-test='username']", "wrong")
+    page.fill("input[data-test='password']", "wrong")
+    page.click("input[data-test='login-button']")
 
-        page.goto("https://www.saucedemo.com")
-        page.fill("input[data-test='username']", "wrong")
-        page.fill("input[data-test='password']", "wrong")
-        page.click("input[data-test='login-button']")
+    expect(page.locator("[data-test='error']"))
 
-        expect(page.locator("[data-test='error']"))
+        
+def test_add_to_cart(page):
+    
+    page.goto("https://www.saucedemo.com")
+    page.fill("input[data-test='username']", "standard_user")
+    page.fill("input[data-test='password']", "secret_sauce")
+    page.click("input[data-test='login-button']")
 
-        browser.close()
-
-def test_add_to_cart():
-    with sync_playwright() as p: 
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
-
-        page.goto("https://www.saucedemo.com")
-        page.fill("input[data-test='username']", "standard_user")
-        page.fill("input[data-test='password']", "secret_sauce")
-        page.click("input[data-test='login-button']")
-
-        page.click("[data-test='add-to-cart-sauce-labs-onesie']")
-        expect(page.locator("[data-test='shopping-cart-badge']")).to_have_text('1')
-
-        browser.close()
+    page.click("[data-test='add-to-cart-sauce-labs-onesie']")
+    expect(page.locator("[data-test='shopping-cart-badge']")).to_have_text('1')
