@@ -22,12 +22,7 @@ def test_invalid_login(page):
     expect(page.locator("[data-test='error']"))
 
         
-def test_add_to_cart(page):
-    
-    page.goto("https://www.saucedemo.com")
-    page.fill("input[data-test='username']", "standard_user")
-    page.fill("input[data-test='password']", "secret_sauce")
-    page.click("input[data-test='login-button']")
+def test_add_to_cart(logged_in_page):
 
-    page.click("[data-test='add-to-cart-sauce-labs-onesie']")
-    expect(page.locator("[data-test='shopping-cart-badge']")).to_have_text('1')
+    logged_in_page.click("[data-test='add-to-cart-sauce-labs-onesie']")
+    expect(logged_in_page.locator("[data-test='shopping-cart-badge']")).to_have_text('1')
