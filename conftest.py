@@ -1,5 +1,6 @@
 import pytest
 from playwright.sync_api import sync_playwright
+from config import USERNAME, BASE_URL, PASSWORD
 
 @pytest.fixture
 def page():
@@ -14,8 +15,8 @@ def page():
         
 @pytest.fixture
 def logged_in_page(page):
-    page.goto("https://www.saucedemo.com")
-    page.fill("[data-test='username']", "standard_user")
-    page.fill("[data-test='password']", "secret_sauce")
+    page.goto(BASE_URL)
+    page.fill("[data-test='username']", USERNAME)
+    page.fill("[data-test='password']", PASSWORD)
     page.click("[data-test='login-button']")
     return page
